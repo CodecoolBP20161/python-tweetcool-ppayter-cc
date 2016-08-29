@@ -2,6 +2,7 @@ import argparse
 import ipaddress
 import json
 import requests as r
+import datetime
 
 
 parser = argparse.ArgumentParser()
@@ -29,27 +30,9 @@ if not(1024 < server["port"] < 65535):
 
 server["address"] = 'http://' + server["host"].compressed + ':' + str(server["port"])
 
-# Logic starts here... somewhere..
-
-'''Client
-
-The client is responsible to represent the previously saved tweets and to
-collect new ones from the user.
-
-Expected behavior
-
-The client should be a console application running until the user enters
-"exit" or presses Ctrl+D.
-It should run in a loop, and with every running it should perform the following:
-
-- Query tweets from the server
-- Format and print the previous tweets. Example:
-    Chewbacca <1977-05-25 20:16:10>: Uuuuuuurr Ahhhhrrr Uhrrr
-- Ask the user for message input. (also allow refreshing the list and exiting)
-- Also handle all possible exceptions, even Ctrl+D exiting the application.'''
-
 
 def write_post():
+    """pushes new post the server"""
     poster = input('\nEnter your name:  \n')
     content = input('\nWrite something: \n')
     tweet = {'poster': poster, 'content': content}
@@ -57,24 +40,37 @@ def write_post():
 
 
 def read_posts():
-    pass
+    """pulls posts from the server"""
+    bold_text = '\033[1m'
+    end_text = '\033[0m'
+
+    posts = r.get(server['address']+'/tweet').json()
+
+    for post in posts:
+        print('\n' +  '[' + str(datetime.datetime.utcfromtimestamp(int(post['timestamp']))) + ']' +
+              '\n' + bold_text + post['poster'] + ':' + '\n' + end_text + post['content'])
 
 
 def main_menu():
+    # coloring just for fun
     header_color = '\033[95m'
     warning_color = '\033[91m'
     end_color = '\033[0m'
 
-    warning_text = ''
+    warning_text = ''  # neccessary to print the warning in the correct place
     header_text = (header_color + '\nTweetCool 🐦' + end_color)
+
     choice = None
+
     try:
         while choice != '0':
             print(header_text)
             read_posts()
             print(header_text)
-            print(warning_text)
+            print(warning_text)  # normally nothing is printed, unless the user enters incorrect input
+
             print('1: refresh tweets \n2: write a tweet \n0: quit')
+
             choice = input('Enter an option: ').lower().strip()
             if choice == '1':
                 read_posts()
