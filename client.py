@@ -1,5 +1,7 @@
 import argparse
 import ipaddress
+import json
+import requests as r
 
 
 parser = argparse.ArgumentParser()
@@ -48,7 +50,10 @@ It should run in a loop, and with every running it should perform the following:
 
 
 def write_post():
-    pass
+    poster = input('\nEnter your name:  \n')
+    content = input('\nWrite something: \n')
+    tweet = {'poster': poster, 'content': content}
+    post = r.post(server['address']+'/tweet', json=tweet)
 
 
 def read_posts():
@@ -56,17 +61,32 @@ def read_posts():
 
 
 def main_menu():
-    choice = None
+    header_color = '\033[95m'
     warning_color = '\033[91m'
     end_color = '\033[0m'
-    while choice != '0':
-        print('\n1: read tweets \n2: write a tweet \n0: quit')
-        choice = input('Enter an option: ').lower().strip()
-        if choice == '1':
+
+    warning_text = ''
+    header_text = (header_color + '\nTweetCool 🐦' + end_color)
+    choice = None
+    try:
+        while choice != '0':
+            print(header_text)
             read_posts()
-        elif choice == '2':
-            write_post()
-        else:
-            print(warning_color + '\ninvalid option' + end_color)
+            print(header_text)
+            print(warning_text)
+            print('1: refresh tweets \n2: write a tweet \n0: quit')
+            choice = input('Enter an option: ').lower().strip()
+            if choice == '1':
+                read_posts()
+            elif choice == '2':
+                write_post()
+            elif choice == '0':
+                print(warning_color + '\nbye-bye' + end_color)
+                break
+            else:
+                warning_text = (warning_color + '\ninvalid option' + end_color)
+
+    except (EOFError, KeyboardInterrupt):
+        print(warning_color + '\n\nrage quit lol' + end_color)
 
 main_menu()
