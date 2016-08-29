@@ -56,4 +56,17 @@ def read_posts():
 
 
 def main_menu():
-    pass
+    choice = None
+    warning_color = '\033[91m'
+    end_color = '\033[0m'
+    while choice != '0':
+        print('\n1: read tweets \n2: write a tweet \n0: quit')
+        choice = input('Enter an option: ').lower().strip()
+        if choice == '1':
+            read_posts()
+        elif choice == '2':
+            write_post()
+        else:
+            print(warning_color + '\ninvalid option' + end_color)
+
+main_menu()
