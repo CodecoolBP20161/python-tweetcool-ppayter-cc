@@ -28,3 +28,32 @@ if not(1024 < server["port"] < 65535):
 server["address"] = 'http://' + server["host"].compressed + ':' + str(server["port"])
 
 # Logic starts here... somewhere..
+
+'''Client
+
+The client is responsible to represent the previously saved tweets and to
+collect new ones from the user.
+
+Expected behavior
+
+The client should be a console application running until the user enters
+"exit" or presses Ctrl+D.
+It should run in a loop, and with every running it should perform the following:
+
+- Query tweets from the server
+- Format and print the previous tweets. Example:
+    Chewbacca <1977-05-25 20:16:10>: Uuuuuuurr Ahhhhrrr Uhrrr
+- Ask the user for message input. (also allow refreshing the list and exiting)
+- Also handle all possible exceptions, even Ctrl+D exiting the application.'''
+
+
+def write_post():
+    pass
+
+
+def read_posts():
+    pass
+
+
+def main_menu():
+    pass
